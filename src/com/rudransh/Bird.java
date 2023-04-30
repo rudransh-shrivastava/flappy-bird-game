@@ -9,7 +9,7 @@ public class Bird extends Rectangle {
     //declaring values
     int yAcceleration;
     int yVelocity = -3;
-    int gravity = 1;
+    int gravity = 1; // todo this gravity is like standing on the sun
 
     Bird(int x, int y, int width, int height){
         super(x, y, width, height);
