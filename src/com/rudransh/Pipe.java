@@ -9,20 +9,20 @@ public class Pipe extends Rectangle {
 
     Random random;
     int id;
-    int xVelocity;
+    int xVelocity = -1;
+    int pipeSpacing;
 
-    Pipe(){
-        //TODO ////////////////////
+    Pipe(int x, int y, int width, int height){
+        //super x y width height
+        super(x, y, width, height);
     }
 
-    public void setXDirection(int xDirection) {
-
-    }
     public void move() {
-
+        x += xVelocity;
     }
     public void draw(Graphics g) {
-
+        g.setColor(Color.green);
+        g.fillRect(x, y, width, height);
     }
 
 }

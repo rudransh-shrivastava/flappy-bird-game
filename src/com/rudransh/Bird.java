@@ -15,9 +15,6 @@ public class Bird extends Rectangle {
         super(x, y, width, height);
     }
 
-    public void setYDirection(int yDirection) {
-
-    }
     // this code runs every tick
     public void move() {
         y += yVelocity;
@@ -25,7 +22,7 @@ public class Bird extends Rectangle {
     }
     public void draw(Graphics g) {
         g.setColor(Color.white);
-        g.fillOval(x, y, height, width);
+        g.fillOval(x, y, width, height);
     }
 
 }
