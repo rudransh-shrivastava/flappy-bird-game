@@ -12,11 +12,14 @@ public class GamePanel extends JPanel implements Runnable {
     static final int GAME_HEIGHT = 600;
     static final Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH, GAME_HEIGHT);
     static final int BIRD_SIZE = (int)(GAME_WIDTH/30);
+    static final int PIPE_SPACING = (int)(BIRD_SIZE*4);
     Thread gameThread;
     Image image;
     Graphics graphics;
     Random random;
-    Pipe pipe;
+    Pipe topPipe;
+    Pipe bottomPipe;
+    int topPipeLength;
     Bird bird;
     Score score;
 
@@ -40,7 +43,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void newPipe() {
-        pipe = new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2), 0, GamePanel.BIRD_SIZE*2, GamePanel.GAME_HEIGHT);
+        random = new Random();
+        topPipeLength = random.nextInt(400);
+        topPipe = new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2), 0, GamePanel.BIRD_SIZE*2, topPipeLength);
+        bottomPipe = new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2), topPipeLength+PIPE_SPACING, GamePanel.BIRD_SIZE*2, GAME_WIDTH-PIPE_SPACING-topPipeLength);
     }
     //creates a new bird also used for creating the first bird
     public void newBird() {
@@ -54,11 +60,13 @@ public class GamePanel extends JPanel implements Runnable {
     }
     public void draw(Graphics g) {
         bird.draw(g);
-        pipe.draw(g);
+        topPipe.draw(g);
+        bottomPipe.draw(g);
     }
     public void move() {
         bird.move();
-        pipe.move();
+        topPipe.move();
+        bottomPipe.move();
     }
     //checking for all collisions
     public void checkCollision() {
@@ -90,7 +98,7 @@ public class GamePanel extends JPanel implements Runnable {
     public class Jump extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
-            bird.yVelocity = -16;
+            bird.yVelocity = -13;
         }
     }
 }

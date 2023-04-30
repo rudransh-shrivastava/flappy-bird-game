@@ -9,11 +9,9 @@ public class Pipe extends Rectangle {
 
     Random random;
     int id;
-    int xVelocity = -1;
-    int pipeSpacing;
+    int xVelocity = -3;
 
     Pipe(int x, int y, int width, int height){
-        //super x y width height
         super(x, y, width, height);
     }
 
