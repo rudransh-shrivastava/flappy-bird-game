@@ -8,7 +8,7 @@ import javax.swing.*;
 public class Pipe extends Rectangle {
 
     Random random;
-    float xVelocity = -3;
+    float xVelocity = -4;
 
     Pipe(float x, float y, float width, float height){
         super((int)x, (int)y, (int)width, (int)height);

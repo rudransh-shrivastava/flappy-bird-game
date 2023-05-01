@@ -9,6 +9,7 @@ public class GamePanel extends JPanel implements Runnable {
     //declare values
     Action jump;
     Action gameEnter;
+    Action gameMenuEnter;
     static final float GAME_WIDTH = 1000;
     static final float GAME_HEIGHT = 600;
     static final Dimension SCREEN_SIZE = new Dimension((int)GAME_WIDTH, (int)GAME_HEIGHT);
@@ -21,6 +22,7 @@ public class GamePanel extends JPanel implements Runnable {
     GameMenu menu;
     Pipe topPipe;
     Pipe bottomPipe;
+    GameOver gameOver;
     float topPipeLength;
     Bird bird;
     Score score;
@@ -43,8 +45,12 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == GameState.MENU) {
             newMenu();
         }
+        if (gameState == GameState.GAME_OVER) {
+            newGameOver();
+        }
         jump = new Jump();
         gameEnter = new GameEnter();
+        gameMenuEnter = new GameMenuEnter();
         score = new Score(GAME_WIDTH, GAME_HEIGHT); // todo
         this.setFocusable(true);
         this.setPreferredSize(SCREEN_SIZE);
@@ -61,9 +67,15 @@ public class GamePanel extends JPanel implements Runnable {
             this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameEnter");
             this.getActionMap().put("gameEnter", gameEnter);
         }
+        if (gameState == GameState.GAME_OVER) {
+            this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameOver");
+            this.getActionMap().put("gameOver", gameMenuEnter);
+        }
 
     }
-
+    public void newGameOver() {
+        gameOver = new GameOver();
+    }
     public void newMenu() {
         menu = new GameMenu();
     }
@@ -93,6 +105,9 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == GameState.MENU) {
             menu.draw(g);
         }
+        if (gameState == GameState.GAME_OVER) {
+            gameOver.draw(g);
+        }
     }
     public void move() {
         if (gameState == GameState.PLAYING) {
@@ -100,7 +115,7 @@ public class GamePanel extends JPanel implements Runnable {
                 bird.move();
             }
             if (topPipe != null) {
-                topPipe.move();bird.move();
+                topPipe.move();
             }
             if (bottomPipe != null) {
                 bottomPipe.move();
@@ -115,7 +130,11 @@ public class GamePanel extends JPanel implements Runnable {
             if(bird.y<0)
                 bird.y = 0;
             if(bird.y>=GAME_HEIGHT-BIRD_SIZE)
-                bird.y = (int)(GAME_HEIGHT-BIRD_SIZE);
+                GameOverEnter();
+            if(bird.intersects(topPipe))
+                GameOverEnter();
+            if(bird.intersects(bottomPipe))
+                GameOverEnter();
         }
         
     }
@@ -137,11 +156,19 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
+    //executes when the game os over
+    public void GameOverEnter() {
+        gameState = GameState.GAME_OVER;
+        newGameOver();
+        getInputMap().remove(KeyStroke.getKeyStroke("UP"));
+        getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameMenuEnter");
+        getActionMap().put("gameMenuEnter", gameMenuEnter);
+    }
     //when jump key is pressed this code is executed
     public class Jump extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
-            bird.yVelocity = -5;
+            bird.yVelocity = -7;
         }
     }
     public class GameEnter extends AbstractAction {
@@ -155,4 +182,16 @@ public class GamePanel extends JPanel implements Runnable {
             getActionMap().put("jump", jump);
         }
     }
+    public class GameMenuEnter extends AbstractAction {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            gameState = GameState.MENU;
+            newMenu();
+            getInputMap().remove(KeyStroke.getKeyStroke("ENTER"));
+            getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameEnter");
+            getActionMap().put("gameEnter", gameEnter);
+
+        }
+    }
+
 }
