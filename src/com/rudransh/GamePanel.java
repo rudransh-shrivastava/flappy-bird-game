@@ -116,7 +116,9 @@ public class GamePanel extends JPanel implements Runnable {
             menu.draw(g);
         }
         if (gameState == GameState.GAME_OVER) {
-            gameOver.draw(g);
+            if (gameOver != null) {
+                gameOver.draw(g);
+            }
         }
     }
     public void move() {
@@ -143,7 +145,11 @@ public class GamePanel extends JPanel implements Runnable {
                 bird.y = 0;
             if(bird.y>=GAME_HEIGHT-BIRD_SIZE)
                 GameOverEnter();
-            //todo add pipes collision
+            for (int i=pipes.size()-1;i>=0;i--) {
+                if (bird.intersects(pipes.get(i))) {
+                    GameOverEnter();
+                }
+            }
         }
         
     }
@@ -168,11 +174,11 @@ public class GamePanel extends JPanel implements Runnable {
     //executes when the game os over
     public void GameOverEnter() {
         gameState = GameState.GAME_OVER;
-        pipes.clear();
         newGameOver();
         getInputMap().remove(KeyStroke.getKeyStroke("UP"));
         getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameMenuEnter");
         getActionMap().put("gameMenuEnter", gameMenuEnter);
+        pipes.clear();
     }
     //when jump key is pressed this code is executed
     public class Jump extends AbstractAction {
