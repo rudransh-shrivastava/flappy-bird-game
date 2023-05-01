@@ -140,14 +140,16 @@ public class GamePanel extends JPanel implements Runnable {
     //checking for all collisions
     public void checkCollision() {
         // check bird boundary collision
-        if (gameState == GameState.PLAYING && bird != null) {
+        if (gameState == GameState.PLAYING && bird != null && pipes.size() > 0) {
             if(bird.y<0)
                 bird.y = 0;
             if(bird.y>=GAME_HEIGHT-BIRD_SIZE)
                 GameOverEnter();
-            for (int i=pipes.size()-1;i>=0;i--) {
-                if (bird.intersects(pipes.get(i))) {
-                    GameOverEnter();
+            if (pipes.size()>0){
+                for (int i = pipes.size() - 1; i >= 0; i--) {
+                    if (i < pipes.size() && bird.intersects(pipes.get(i))) {
+                        GameOverEnter();
+                    }
                 }
             }
         }
