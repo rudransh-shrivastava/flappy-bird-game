@@ -8,6 +8,7 @@ import javax.swing.*;
 public class GamePanel extends JPanel implements Runnable {
     //declare values
     Action jump;
+    Action gameEnter;
     static final int GAME_WIDTH = 1000;
     static final int GAME_HEIGHT = 600;
     static final Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH, GAME_HEIGHT);
@@ -17,29 +18,54 @@ public class GamePanel extends JPanel implements Runnable {
     Image image;
     Graphics graphics;
     Random random;
+    GameMenu menu;
     Pipe topPipe;
     Pipe bottomPipe;
     int topPipeLength;
     Bird bird;
     Score score;
 
+    private enum GameState {
+        MENU,
+        PLAYING,
+        GAME_OVER;
+    }
+    private GameState gameState = GameState.MENU;
+
+
     //create a game panel
     GamePanel(){
-        newBird();
-        newPipe();
+
+        if (gameState == GameState.PLAYING) {
+            newBird();
+            newPipe();
+        }
+        if (gameState == GameState.MENU) {
+            newMenu();
+        }
         jump = new Jump();
-        score = new Score(GAME_WIDTH, GAME_HEIGHT);
+        gameEnter = new GameEnter();
+        score = new Score(GAME_WIDTH, GAME_HEIGHT); // todo
         this.setFocusable(true);
-        //todo space key action listener key listener;
         this.setPreferredSize(SCREEN_SIZE);
 
         //create game thread
         gameThread = new Thread(this);
         gameThread.start();
         //action for jump key
-        this.getInputMap().put(KeyStroke.getKeyStroke("UP"), "jump");
-        this.getActionMap().put("jump", jump);
+        if (gameState == GameState.PLAYING) {
+            this.getInputMap().put(KeyStroke.getKeyStroke("UP"), "jump");
+            this.getActionMap().put("jump", jump);
+        }
+        if (gameState == GameState.MENU) {
+            this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameEnter");
+            this.getActionMap().put("gameEnter", gameEnter);
+        }
 
+    }
+
+    public void newMenu() {
+        menu = new GameMenu();
     }
 
     public void newPipe() {
@@ -59,22 +85,39 @@ public class GamePanel extends JPanel implements Runnable {
         g.drawImage(image,0,0,this);
     }
     public void draw(Graphics g) {
-        bird.draw(g);
-        topPipe.draw(g);
-        bottomPipe.draw(g);
+        if (gameState == GameState.PLAYING) {
+            bird.draw(g);
+            topPipe.draw(g);
+            bottomPipe.draw(g);
+        }
+        if (gameState == GameState.MENU) {
+            menu.draw(g);
+        }
     }
     public void move() {
-        bird.move();
-        topPipe.move();
-        bottomPipe.move();
+        if (gameState == GameState.PLAYING) {
+            if (bird != null) {
+                bird.move();
+            }
+            if (topPipe != null) {
+                topPipe.move();bird.move();
+            }
+            if (bottomPipe != null) {
+                bottomPipe.move();
+            }
+        }
+
     }
     //checking for all collisions
     public void checkCollision() {
         // check bird boundary collision
-        if(bird.y<0)
-            bird.y = 0;
-        if(bird.y>=GAME_HEIGHT-BIRD_SIZE)
-            bird.y = GAME_HEIGHT-BIRD_SIZE;
+        if (gameState == GameState.PLAYING && bird != null) {
+            if(bird.y<0)
+                bird.y = 0;
+            if(bird.y>=GAME_HEIGHT-BIRD_SIZE)
+                bird.y = GAME_HEIGHT-BIRD_SIZE;
+        }
+        
     }
     // running the game in 60 ticks per second / 60 fps
     public void run() {
@@ -98,7 +141,18 @@ public class GamePanel extends JPanel implements Runnable {
     public class Jump extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
-            bird.yVelocity = -13;
+            bird.yVelocity = -22;
+        }
+    }
+    public class GameEnter extends AbstractAction {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            gameState = GameState.PLAYING;
+            newBird();
+            newPipe();
+            getInputMap().remove(KeyStroke.getKeyStroke("ENTER"));
+            getInputMap().put(KeyStroke.getKeyStroke("UP"), "jump");
+            getActionMap().put("jump", jump);
         }
     }
 }
