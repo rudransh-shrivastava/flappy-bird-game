@@ -9,11 +9,11 @@ public class GamePanel extends JPanel implements Runnable {
     //declare values
     Action jump;
     Action gameEnter;
-    static final int GAME_WIDTH = 1000;
-    static final int GAME_HEIGHT = 600;
-    static final Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH, GAME_HEIGHT);
-    static final int BIRD_SIZE = (int)(GAME_WIDTH/30);
-    static final int PIPE_SPACING = (int)(BIRD_SIZE*4);
+    static final float GAME_WIDTH = 1000;
+    static final float GAME_HEIGHT = 600;
+    static final Dimension SCREEN_SIZE = new Dimension((int)GAME_WIDTH, (int)GAME_HEIGHT);
+    static final float BIRD_SIZE = (float)(GAME_WIDTH/30);
+    static final float PIPE_SPACING = (float)(BIRD_SIZE*4);
     Thread gameThread;
     Image image;
     Graphics graphics;
@@ -21,7 +21,7 @@ public class GamePanel extends JPanel implements Runnable {
     GameMenu menu;
     Pipe topPipe;
     Pipe bottomPipe;
-    int topPipeLength;
+    float topPipeLength;
     Bird bird;
     Score score;
 
@@ -115,7 +115,7 @@ public class GamePanel extends JPanel implements Runnable {
             if(bird.y<0)
                 bird.y = 0;
             if(bird.y>=GAME_HEIGHT-BIRD_SIZE)
-                bird.y = GAME_HEIGHT-BIRD_SIZE;
+                bird.y = (int)(GAME_HEIGHT-BIRD_SIZE);
         }
         
     }
@@ -141,7 +141,7 @@ public class GamePanel extends JPanel implements Runnable {
     public class Jump extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
-            bird.yVelocity = -22;
+            bird.yVelocity = -5;
         }
     }
     public class GameEnter extends AbstractAction {

@@ -8,11 +8,10 @@ import javax.swing.*;
 public class Pipe extends Rectangle {
 
     Random random;
-    int id;
-    int xVelocity = -3;
+    float xVelocity = -3;
 
-    Pipe(int x, int y, int width, int height){
-        super(x, y, width, height);
+    Pipe(float x, float y, float width, float height){
+        super((int)x, (int)y, (int)width, (int)height);
     }
 
     public void move() {

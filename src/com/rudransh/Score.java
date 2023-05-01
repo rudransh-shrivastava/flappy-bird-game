@@ -7,11 +7,11 @@ import javax.swing.*;
 
 public class Score extends Rectangle {
 
-    static int GAME_WIDTH;
-    static int GAME_HEIGHT;
-    int gameScore;
+    static float GAME_WIDTH;
+    static float GAME_HEIGHT;
+    float gameScore;
 
-    Score(int GAME_WIDTH, int GAME_HEIGHT){
+    Score(float GAME_WIDTH, float GAME_HEIGHT){
 
     }
 

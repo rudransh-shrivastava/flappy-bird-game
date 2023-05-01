@@ -10,6 +10,6 @@ public class GameMenu extends Rectangle {
     }
     public void draw(Graphics g) {
         g.setColor(Color.white);
-        g.fillOval(1, 1, 100, 100);
+        g.drawString("MAIN MENU TEMP", 300, 300);
     }
 }

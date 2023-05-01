@@ -7,11 +7,11 @@ import javax.swing.*;
 
 public class Bird extends Rectangle {
     //declaring values
-    int yVelocity = -3;
-    int gravity = 1; // todo this gravity is like standing on the sun
+    float yVelocity = -3;
+    float gravity = 0.2F; // todo this gravity is like standing on the sun
 
-    Bird(int x, int y, int width, int height){
-        super(x, y, width, height);
+    Bird(float x, float y, float width, float height){
+        super((int)x, (int)y, (int)width, (int)height);
     }
 
     // this code runs every tick
