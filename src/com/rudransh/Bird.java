@@ -7,7 +7,6 @@ import javax.swing.*;
 
 public class Bird extends Rectangle {
     //declaring values
-    int yAcceleration;
     int yVelocity = -3;
     int gravity = 1; // todo this gravity is like standing on the sun
 
