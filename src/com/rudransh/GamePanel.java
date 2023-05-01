@@ -15,13 +15,12 @@ public class GamePanel extends JPanel implements Runnable {
     static final Dimension SCREEN_SIZE = new Dimension((int)GAME_WIDTH, (int)GAME_HEIGHT);
     static final float BIRD_SIZE = (float)(GAME_WIDTH/30);
     static final float PIPE_SPACING = (float)(BIRD_SIZE*4);
+    ArrayList<Pipe> pipes = new ArrayList<Pipe>();
     Thread gameThread;
     Image image;
     Graphics graphics;
     Random random;
     GameMenu menu;
-    Pipe topPipe;
-    Pipe bottomPipe;
     GameOver gameOver;
     float topPipeLength;
     Bird bird;
@@ -40,7 +39,10 @@ public class GamePanel extends JPanel implements Runnable {
 
         if (gameState == GameState.PLAYING) {
             newBird();
-            newPipe();
+            newPipe(true);
+            newPipe(true);
+            newPipe(true);
+            newPipe(true);
         }
         if (gameState == GameState.MENU) {
             newMenu();
@@ -80,11 +82,18 @@ public class GamePanel extends JPanel implements Runnable {
         menu = new GameMenu();
     }
 
-    public void newPipe() {
+    public void newPipe(boolean start) {
         random = new Random();
         topPipeLength = random.nextInt(400);
-        topPipe = new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2), 0, GamePanel.BIRD_SIZE*2, topPipeLength);
-        bottomPipe = new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2), topPipeLength+PIPE_SPACING, GamePanel.BIRD_SIZE*2, GAME_WIDTH-PIPE_SPACING-topPipeLength);
+        if(start) {
+            pipes.add(new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2)+pipes.size()*300, 0, GamePanel.BIRD_SIZE*2, topPipeLength));
+            pipes.add(new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2)+(pipes.size()-1)*300, topPipeLength+PIPE_SPACING, GamePanel.BIRD_SIZE*2, GAME_WIDTH-PIPE_SPACING-topPipeLength));
+        }
+        else {
+            pipes.add(new Pipe(pipes.get(pipes.size()-1).x + 600, 0, GamePanel.BIRD_SIZE*2, topPipeLength));
+            pipes.add(new Pipe(pipes.get(pipes.size()-1).x, topPipeLength+PIPE_SPACING, GamePanel.BIRD_SIZE*2, GAME_WIDTH-PIPE_SPACING-topPipeLength));
+        }
+
     }
     //creates a new bird also used for creating the first bird
     public void newBird() {
@@ -99,8 +108,9 @@ public class GamePanel extends JPanel implements Runnable {
     public void draw(Graphics g) {
         if (gameState == GameState.PLAYING) {
             bird.draw(g);
-            topPipe.draw(g);
-            bottomPipe.draw(g);
+            for (int i=pipes.size()-1;i>=0;i--) {
+                pipes.get(i).draw(g);
+            }
         }
         if (gameState == GameState.MENU) {
             menu.draw(g);
@@ -114,11 +124,13 @@ public class GamePanel extends JPanel implements Runnable {
             if (bird != null) {
                 bird.move();
             }
-            if (topPipe != null) {
-                topPipe.move();
-            }
-            if (bottomPipe != null) {
-                bottomPipe.move();
+            for (int i=pipes.size()-1;i>=0;i--) {
+                pipes.get(i).move();
+
+                if (pipes.get(i).x+GamePanel.BIRD_SIZE*2 < 0) {
+                    pipes.remove(pipes.get(i));
+                    newPipe(false);
+                }
             }
         }
 
@@ -131,10 +143,7 @@ public class GamePanel extends JPanel implements Runnable {
                 bird.y = 0;
             if(bird.y>=GAME_HEIGHT-BIRD_SIZE)
                 GameOverEnter();
-            if(bird.intersects(topPipe))
-                GameOverEnter();
-            if(bird.intersects(bottomPipe))
-                GameOverEnter();
+            //todo add pipes collision
         }
         
     }
@@ -159,6 +168,7 @@ public class GamePanel extends JPanel implements Runnable {
     //executes when the game os over
     public void GameOverEnter() {
         gameState = GameState.GAME_OVER;
+        pipes.clear();
         newGameOver();
         getInputMap().remove(KeyStroke.getKeyStroke("UP"));
         getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameMenuEnter");
@@ -176,7 +186,10 @@ public class GamePanel extends JPanel implements Runnable {
         public void actionPerformed(ActionEvent e) {
             gameState = GameState.PLAYING;
             newBird();
-            newPipe();
+            newPipe(true);
+            newPipe(true);
+            newPipe(true);
+            newPipe(true);
             getInputMap().remove(KeyStroke.getKeyStroke("ENTER"));
             getInputMap().put(KeyStroke.getKeyStroke("UP"), "jump");
             getActionMap().put("jump", jump);

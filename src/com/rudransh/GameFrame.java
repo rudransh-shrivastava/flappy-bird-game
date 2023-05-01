@@ -13,7 +13,7 @@ public class GameFrame extends JFrame {
         panel = new GamePanel();
         this.add(panel);
         this.setTitle("Flappy Bird");
-        this.setResizable(false);
+        //this.setResizable(false);
         this.setBackground(Color.black);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
