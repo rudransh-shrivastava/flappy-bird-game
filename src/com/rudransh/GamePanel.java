@@ -13,9 +13,10 @@ public class GamePanel extends JPanel implements Runnable {
     static final float GAME_WIDTH = 1000;
     static final float GAME_HEIGHT = 600;
     static final Dimension SCREEN_SIZE = new Dimension((int)GAME_WIDTH, (int)GAME_HEIGHT);
-    static final float BIRD_SIZE = (float)(GAME_WIDTH/30);
-    static final float PIPE_SPACING = (float)(BIRD_SIZE*4);
+    static final float BIRD_SIZE = (GAME_WIDTH/30);
+    static final float PIPE_SPACING = (BIRD_SIZE*4);
     ArrayList<Pipe> pipes = new ArrayList<Pipe>();
+    GameBackground gameBackground;
     Thread gameThread;
     Image image;
     Graphics graphics;
@@ -54,6 +55,7 @@ public class GamePanel extends JPanel implements Runnable {
         gameEnter = new GameEnter();
         gameMenuEnter = new GameMenuEnter();
         score = new Score(GAME_WIDTH, GAME_HEIGHT); // todo
+        gameBackground = new GameBackground();
         this.setFocusable(true);
         this.setPreferredSize(SCREEN_SIZE);
 
@@ -106,6 +108,7 @@ public class GamePanel extends JPanel implements Runnable {
         g.drawImage(image,0,0,this);
     }
     public void draw(Graphics g) {
+        gameBackground.draw(g);
         if (gameState == GameState.PLAYING) {
             bird.draw(g);
             for (int i=pipes.size()-1;i>=0;i--) {
