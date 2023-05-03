@@ -1,14 +1,11 @@
 package com.rudransh;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
 import javax.imageio.ImageIO;
-import javax.swing.*;
 
 public class Bird extends Rectangle {
     //declaring values
@@ -22,7 +19,7 @@ public class Bird extends Rectangle {
         super((int)x, (int)y, (int)width, (int)height);
 
         try {
-            birdImage = ImageIO.read(new File("res/bird.png"));
+            birdImage = ImageIO.read(new File("bird.png"));
         } catch(IOException e) {
             e.printStackTrace();
         }

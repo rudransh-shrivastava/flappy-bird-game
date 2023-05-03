@@ -156,7 +156,7 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
         }
-        
+
     }
     // running the game in 60 ticks per second / 60 fps
     public void run() {
