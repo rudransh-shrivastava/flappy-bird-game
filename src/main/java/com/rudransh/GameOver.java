@@ -9,7 +9,7 @@ public class GameOver extends Rectangle {
 
     }
     public void draw(Graphics g) {
-        g.setColor(Color.white);
+        g.setColor(Color.black);
         g.setFont(new Font("Arial", Font.PLAIN, 30));
         g.drawString("GAME OVER", 400, 200);
         g.drawString("PRESS ENTER KEY TO RETURN TO MAIN MENU", 170, 300);
