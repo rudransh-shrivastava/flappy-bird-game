@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+import static java.awt.Color.black;
+
 public class GamePanel extends JPanel implements Runnable {
     //declare values
     Action jump;
@@ -25,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable {
     GameOver gameOver;
     float topPipeLength;
     Bird bird;
-    Score score;
+    int gameScore;
 
     private enum GameState {
         MENU,
@@ -54,7 +56,6 @@ public class GamePanel extends JPanel implements Runnable {
         jump = new Jump();
         gameEnter = new GameEnter();
         gameMenuEnter = new GameMenuEnter();
-        score = new Score(GAME_WIDTH, GAME_HEIGHT); // todo
         gameBackground = new GameBackground();
         this.setFocusable(true);
         this.setPreferredSize(SCREEN_SIZE);
@@ -88,12 +89,12 @@ public class GamePanel extends JPanel implements Runnable {
         random = new Random();
         topPipeLength = random.nextInt(400);
         if(start) {
-            pipes.add(new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2)+pipes.size()*300, 0, GamePanel.BIRD_SIZE*2, topPipeLength));
-            pipes.add(new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2)+(pipes.size()-1)*300, topPipeLength+PIPE_SPACING, GamePanel.BIRD_SIZE*2, GAME_WIDTH-PIPE_SPACING-topPipeLength));
+            pipes.add(new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2)+pipes.size()*300, 0, GamePanel.BIRD_SIZE*2, topPipeLength, 0));
+            pipes.add(new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2)+(pipes.size()-1)*300, topPipeLength+PIPE_SPACING, GamePanel.BIRD_SIZE*2, GAME_WIDTH-PIPE_SPACING-topPipeLength, 1));
         }
         else {
-            pipes.add(new Pipe(pipes.get(pipes.size()-1).x + 600, 0, GamePanel.BIRD_SIZE*2, topPipeLength));
-            pipes.add(new Pipe(pipes.get(pipes.size()-1).x, topPipeLength+PIPE_SPACING, GamePanel.BIRD_SIZE*2, GAME_WIDTH-PIPE_SPACING-topPipeLength));
+            pipes.add(new Pipe(pipes.get(pipes.size()-1).x + 600, 0, GamePanel.BIRD_SIZE*2, topPipeLength, 0));
+            pipes.add(new Pipe(pipes.get(pipes.size()-1).x, topPipeLength+PIPE_SPACING, GamePanel.BIRD_SIZE*2, GAME_WIDTH-PIPE_SPACING-topPipeLength, 1));
         }
 
     }
@@ -114,6 +115,10 @@ public class GamePanel extends JPanel implements Runnable {
             for (int i=pipes.size()-1;i>=0;i--) {
                 pipes.get(i).draw(g);
             }
+            //Score todo
+            g.setColor(black);
+            g.setFont(new Font("Consolas", Font.PLAIN, 40));
+            g.drawString("Score: " + gameScore/41, 0, 33);
         }
         if (gameState == GameState.MENU) {
             menu.draw(g);
@@ -123,6 +128,7 @@ public class GamePanel extends JPanel implements Runnable {
                 gameOver.draw(g);
             }
         }
+
     }
     public void move() {
         if (gameState == GameState.PLAYING) {
@@ -137,6 +143,14 @@ public class GamePanel extends JPanel implements Runnable {
                     newPipe(false);
                 }
             }
+            //score update
+            if (pipes.size()>0){
+                if ((pipes.get(0).x)+GamePanel.BIRD_SIZE*2<(GAME_WIDTH/5)-BIRD_SIZE && (pipes.get(0).x)+GamePanel.BIRD_SIZE*2<(GAME_WIDTH/5)-BIRD_SIZE+1){
+                    gameScore++;
+                }
+            }
+
+
         }
 
     }
@@ -196,6 +210,7 @@ public class GamePanel extends JPanel implements Runnable {
         @Override
         public void actionPerformed(ActionEvent e) {
             gameState = GameState.PLAYING;
+            gameScore = 0;
             newBird();
             newPipe(true);
             newPipe(true);

@@ -14,13 +14,22 @@ public class Pipe extends Rectangle {
     float xVelocity = -4;
     Image pipeImage;
 
-    Pipe(float x, float y, float width, float height){
+    Pipe(float x, float y, float width, float height, int pNum){
         super((int)x, (int)y, (int)width, (int)height);
-        try {
-            pipeImage = ImageIO.read(new File("pipe.png")).getScaledInstance((int)width, (int)height, 1);
-        } catch(IOException e) {
-            e.printStackTrace();
+        if (pNum == 0){
+            try {
+                pipeImage = ImageIO.read(new File("bottomPipe.png")).getScaledInstance((int)width, (int)height, 1);
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        }else if (pNum == 1){
+            try {
+                pipeImage = ImageIO.read(new File("topPipe.png")).getScaledInstance((int)width, (int)height, 1);
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     public void move() {
