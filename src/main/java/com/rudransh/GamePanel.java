@@ -8,10 +8,9 @@ import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import static java.awt.Color.black;
 
 public class GamePanel extends JPanel implements Runnable {
-    //declare values
+    // declaring the values
     Action jump;
     Action gameEnter;
     Action gameMenuEnter;
@@ -33,16 +32,15 @@ public class GamePanel extends JPanel implements Runnable {
     Bird bird;
     static int gameScore = 0;
     static int highScore = 0;
-
+    // game states
     private enum GameState {
         MENU,
         PLAYING,
         GAME_OVER;
     }
+    // initially the game state is menu
     private GameState gameState = GameState.MENU;
-
-
-    //create a game panel
+    // create a game panel
     GamePanel(){
 
         if (gameState == GameState.PLAYING) {
@@ -58,6 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == GameState.GAME_OVER) {
             newGameOver();
         }
+        // loading the numbers image array
         loadNumbers();
         jump = new Jump();
         gameEnter = new GameEnter();
@@ -66,23 +65,24 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         this.setPreferredSize(SCREEN_SIZE);
 
-        //create game thread
+        // create game thread
         gameThread = new Thread(this);
         gameThread.start();
-        //action for jump key
+        // action for jump key
         if (gameState == GameState.PLAYING) {
             this.getInputMap().put(KeyStroke.getKeyStroke("UP"), "jump");
             this.getActionMap().put("jump", jump);
         }
+        // action for enter key
         if (gameState == GameState.MENU) {
             this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameEnter");
             this.getActionMap().put("gameEnter", gameEnter);
         }
+        // action for enter key
         if (gameState == GameState.GAME_OVER) {
             this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameOver");
             this.getActionMap().put("gameOver", gameMenuEnter);
         }
-
     }
     public void newGameOver() {
         gameOver = new GameOver();
@@ -90,6 +90,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void newMenu() {
         menu = new GameMenu();
     }
+    // this loads the array of number images
     public void loadNumbers() {
         Image zeroImage;
         Image oneImage;
@@ -129,6 +130,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
     }
+    // this converts an integer to an array
     public static int[] intToArray(int n) {
         int digits=0;
         int num = n;
@@ -144,6 +146,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
         return array;
     }
+    // this creates a new pipe, both top and bottom
     public void newPipe(boolean start) {
         random = new Random();
         topPipeLength = random.nextInt(1, 400);
@@ -155,18 +158,19 @@ public class GamePanel extends JPanel implements Runnable {
             pipes.add(new Pipe(pipes.get(pipes.size()-1).x + 600, 0, GamePanel.BIRD_SIZE*2, topPipeLength, 0));
             pipes.add(new Pipe(pipes.get(pipes.size()-1).x, topPipeLength+PIPE_SPACING, GamePanel.BIRD_SIZE*2, GAME_WIDTH-PIPE_SPACING-topPipeLength, 1));
         }
-
     }
-    //creates a new bird also used for creating the first bird
+    //this creates a new bird
     public void newBird() {
         bird = new Bird((GAME_WIDTH/5)-BIRD_SIZE,(GAME_HEIGHT/2)-BIRD_SIZE, BIRD_SIZE, BIRD_SIZE);
     }
+
     public void paint(Graphics g) {
         image = createImage(getWidth(), getHeight());
         graphics = image.getGraphics();
         draw(graphics);
         g.drawImage(image,0,0,this);
     }
+    // everything inside of this will be drawn
     public void draw(Graphics g) {
         gameBackground.draw(g);
         if (gameState == GameState.PLAYING) {
@@ -183,7 +187,6 @@ public class GamePanel extends JPanel implements Runnable {
                 }else x = i*30;
                 g.drawImage(numbersImage[scoreArray[i]], x, 5, null);
             }
-
         }
         if (gameState == GameState.MENU) {
             menu.draw(g);
@@ -193,8 +196,8 @@ public class GamePanel extends JPanel implements Runnable {
                 gameOver.draw(g);
             }
         }
-
     }
+    // everything inside of this will move every tick
     public void move() {
         if (gameState == GameState.PLAYING) {
             if (bird != null) {
@@ -208,20 +211,17 @@ public class GamePanel extends JPanel implements Runnable {
                     newPipe(false);
                 }
             }
-            //score update
+            // this updates the score
             if (pipes.size()>0){
                 if ((pipes.get(0).x)+GamePanel.BIRD_SIZE*2<(GAME_WIDTH/5)-BIRD_SIZE && (pipes.get(0).x)+GamePanel.BIRD_SIZE*2<(GAME_WIDTH/5)-BIRD_SIZE+1){
                     gameScore++;
                 }
             }
-
-
         }
-
     }
-    //checking for all collisions
+    // this checks for all collisions
     public void checkCollision() {
-        // check bird boundary collision
+        // this checks for the bird - boundary collision
         if (gameState == GameState.PLAYING && bird != null && pipes.size() > 0) {
             if(bird.y<0)
                 bird.y = 0;
@@ -235,7 +235,6 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
         }
-
     }
     // running the game in 60 ticks per second / 60 fps
     public void run() {
@@ -255,7 +254,14 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
-    //executes when the game os over
+    // when jump key is pressed this code is executed
+    public class Jump extends AbstractAction {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            bird.yVelocity = -7;
+        }
+    }
+    // everything inside this will happen when you enter the game over screen
     public void GameOverEnter() {
         highScore = Math.max(highScore, gameScore);
         gameState = GameState.GAME_OVER;
@@ -265,13 +271,7 @@ public class GamePanel extends JPanel implements Runnable {
         getActionMap().put("gameMenuEnter", gameMenuEnter);
         pipes.clear();
     }
-    //when jump key is pressed this code is executed
-    public class Jump extends AbstractAction {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            bird.yVelocity = -7;
-        }
-    }
+    // everything inside this will happen when you enter the game
     public class GameEnter extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -287,6 +287,7 @@ public class GamePanel extends JPanel implements Runnable {
             getActionMap().put("jump", jump);
         }
     }
+    // everything inside this will happen when you enter the menu
     public class GameMenuEnter extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -295,8 +296,6 @@ public class GamePanel extends JPanel implements Runnable {
             getInputMap().remove(KeyStroke.getKeyStroke("ENTER"));
             getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameEnter");
             getActionMap().put("gameEnter", gameEnter);
-
         }
     }
-
 }

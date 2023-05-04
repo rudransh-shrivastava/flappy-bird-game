@@ -1,15 +1,14 @@
 package com.rudransh;
 
-import java.awt.*;
 import javax.swing.*;
 
 public class GameFrame extends JFrame {
-
+    // declaring the values
     GamePanel panel;
 
     GameFrame(){
         panel = new GamePanel();
-
+        // frame
         this.add(panel);
         this.setTitle("Flappy Bird");
         this.setResizable(false);
