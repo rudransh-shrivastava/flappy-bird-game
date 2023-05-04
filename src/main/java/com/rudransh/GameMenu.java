@@ -1,18 +1,23 @@
 package com.rudransh;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 
 public class GameMenu extends Rectangle {
-
+    BufferedImage gameMenuImage;
     GameMenu(){
-        super(0, 0, 10, 10);
-
+        super(-10, 0, 10, 10);
+        try {
+            gameMenuImage = ImageIO.read(new File("menu.png"));
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
     public void draw(Graphics g) {
-        g.setColor(Color.black);
-        g.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("MAIN MENU", 400, 200);
-        g.drawString("PRESS ENTER TO START THE GAME", 230, 300);
-        g.drawString("TEMP", 440, 400);
+        g.drawImage(gameMenuImage, x, y, null);
     }
 }

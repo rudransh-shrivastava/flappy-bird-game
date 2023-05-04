@@ -1,18 +1,22 @@
 package com.rudransh;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class GameOver extends Rectangle {
-
+    BufferedImage gameOverImage;
     GameOver(){
-        super(0, 0, 10, 10);
-
+        super(150, -130, 10, 10);
+        try {
+            gameOverImage = ImageIO.read(new File("gameover.png"));
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
     public void draw(Graphics g) {
-        g.setColor(Color.black);
-        g.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("GAME OVER", 400, 200);
-        g.drawString("PRESS ENTER KEY TO RETURN TO MAIN MENU", 170, 300);
-        g.drawString("TEMP", 440, 400);
+        g.drawImage(gameOverImage, x, y, null);
     }
 }
