@@ -30,7 +30,6 @@ public class GameOver extends Rectangle {
             g.drawImage(GamePanel.numbersImage[scoreArray[i]], x, 310, null);
         }
         int[] highScoreArray = GamePanel.intToArray(GamePanel.highScore/41);
-        System.out.println(Arrays.toString(highScoreArray));
         if(highScoreArray.length>0){
             for(int i=0;i<highScoreArray.length;i++){
                 int x;
