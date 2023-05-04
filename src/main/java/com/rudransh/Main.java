@@ -9,5 +9,6 @@ public class Main {
     public static void main(String[] args) {
         //run an instance of the game
         GameFrame frame = new GameFrame();
+
     }
 }

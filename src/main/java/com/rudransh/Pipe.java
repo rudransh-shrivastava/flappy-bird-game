@@ -18,13 +18,13 @@ public class Pipe extends Rectangle {
         super((int)x, (int)y, (int)width, (int)height);
         if (pNum == 0){
             try {
-                pipeImage = ImageIO.read(new File("bottomPipe.png")).getScaledInstance((int)width, (int)height, 1);
+                pipeImage = ImageIO.read(new File("topPipe.png")).getScaledInstance((int)width, (int)height, 1);
             } catch(IOException e) {
                 e.printStackTrace();
             }
         }else if (pNum == 1){
             try {
-                pipeImage = ImageIO.read(new File("topPipe.png")).getScaledInstance((int)width, (int)height, 1);
+                pipeImage = ImageIO.read(new File("bottomPipe.png")).getScaledInstance((int)width, (int)height, 1);
             } catch(IOException e) {
                 e.printStackTrace();
             }

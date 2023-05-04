@@ -2,7 +2,10 @@ package com.rudransh;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import static java.awt.Color.black;
@@ -18,6 +21,7 @@ public class GamePanel extends JPanel implements Runnable {
     static final float BIRD_SIZE = (GAME_WIDTH/30);
     static final float PIPE_SPACING = (BIRD_SIZE*4);
     ArrayList<Pipe> pipes = new ArrayList<Pipe>();
+    Image[] numbersImage = new Image[10];
     GameBackground gameBackground;
     Thread gameThread;
     Image image;
@@ -53,6 +57,7 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == GameState.GAME_OVER) {
             newGameOver();
         }
+        loadNumbers();
         jump = new Jump();
         gameEnter = new GameEnter();
         gameMenuEnter = new GameMenuEnter();
@@ -84,7 +89,60 @@ public class GamePanel extends JPanel implements Runnable {
     public void newMenu() {
         menu = new GameMenu();
     }
+    public void loadNumbers() {
+        Image zeroImage;
+        Image oneImage;
+        Image twoImage;
+        Image threeImage;
+        Image fourImage;
+        Image fiveImage;
+        Image sixImage;
+        Image sevenImage;
+        Image eightImage;
+        Image nineImage;
+        try {
+            zeroImage = ImageIO.read(new File("zero.png"));
+            oneImage = ImageIO.read(new File("one.png"));
+            twoImage = ImageIO.read(new File("two.png"));
+            threeImage = ImageIO.read(new File("three.png"));
+            fourImage = ImageIO.read(new File("four.png"));
+            fiveImage = ImageIO.read(new File("five.png"));
+            sixImage = ImageIO.read(new File("six.png"));
+            sevenImage = ImageIO.read(new File("seven.png"));
+            eightImage = ImageIO.read(new File("eight.png"));
+            nineImage = ImageIO.read(new File("nine.png"));
 
+            numbersImage[0] = zeroImage;
+            numbersImage[1] = oneImage;
+            numbersImage[2] = twoImage;
+            numbersImage[3] = threeImage;
+            numbersImage[4] = fourImage;
+            numbersImage[5] = fiveImage;
+            numbersImage[6] = sixImage;
+            numbersImage[7] = sevenImage;
+            numbersImage[8] = eightImage;
+            numbersImage[9] = nineImage;
+
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public int[] intToArray(int n) {
+        int digits=0;
+        int num = n;
+        while(num>0){
+            num = num/10;
+            digits++;
+        }
+        int[] array = new int[digits];
+        for(int i=digits-1;i>=0;i--){
+            int lastDigit = n % 10;
+            array[i] = lastDigit;
+            n = n / 10;
+        }
+        return array;
+    }
     public void newPipe(boolean start) {
         random = new Random();
         topPipeLength = random.nextInt(400);
@@ -115,10 +173,16 @@ public class GamePanel extends JPanel implements Runnable {
             for (int i=pipes.size()-1;i>=0;i--) {
                 pipes.get(i).draw(g);
             }
-            //Score todo
-            g.setColor(black);
-            g.setFont(new Font("Consolas", Font.PLAIN, 40));
-            g.drawString("Score: " + gameScore/41, 0, 33);
+            int score = gameScore*50/41;
+            int[] scoreArray = intToArray(score);
+            for(int i=0;i<scoreArray.length;i++){
+                int x;
+                if(i==0){
+                    x=5;
+                }else x = i*30;
+                g.drawImage(numbersImage[scoreArray[i]], x, 5, null);
+            }
+
         }
         if (gameState == GameState.MENU) {
             menu.draw(g);
