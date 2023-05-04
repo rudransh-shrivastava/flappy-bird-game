@@ -21,7 +21,7 @@ public class GamePanel extends JPanel implements Runnable {
     static final float BIRD_SIZE = (GAME_WIDTH/30);
     static final float PIPE_SPACING = (BIRD_SIZE*4);
     ArrayList<Pipe> pipes = new ArrayList<Pipe>();
-    Image[] numbersImage = new Image[10];
+    static Image[] numbersImage = new Image[10];
     GameBackground gameBackground;
     Thread gameThread;
     Image image;
@@ -31,7 +31,8 @@ public class GamePanel extends JPanel implements Runnable {
     GameOver gameOver;
     float topPipeLength;
     Bird bird;
-    int gameScore;
+    static int gameScore = 0;
+    static int highScore = 0;
 
     private enum GameState {
         MENU,
@@ -128,7 +129,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
     }
-    public int[] intToArray(int n) {
+    public static int[] intToArray(int n) {
         int digits=0;
         int num = n;
         while(num>0){
@@ -145,7 +146,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
     public void newPipe(boolean start) {
         random = new Random();
-        topPipeLength = random.nextInt(400);
+        topPipeLength = random.nextInt(1, 400);
         if(start) {
             pipes.add(new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2)+pipes.size()*300, 0, GamePanel.BIRD_SIZE*2, topPipeLength, 0));
             pipes.add(new Pipe(GamePanel.GAME_WIDTH-(GamePanel.BIRD_SIZE*2)+(pipes.size()-1)*300, topPipeLength+PIPE_SPACING, GamePanel.BIRD_SIZE*2, GAME_WIDTH-PIPE_SPACING-topPipeLength, 1));
@@ -173,7 +174,7 @@ public class GamePanel extends JPanel implements Runnable {
             for (int i=pipes.size()-1;i>=0;i--) {
                 pipes.get(i).draw(g);
             }
-            int score = gameScore*50/41;
+            int score = gameScore/41;
             int[] scoreArray = intToArray(score);
             for(int i=0;i<scoreArray.length;i++){
                 int x;
@@ -256,6 +257,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
     //executes when the game os over
     public void GameOverEnter() {
+        highScore = Math.max(highScore, gameScore);
         gameState = GameState.GAME_OVER;
         newGameOver();
         getInputMap().remove(KeyStroke.getKeyStroke("UP"));
