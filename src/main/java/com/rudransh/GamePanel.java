@@ -3,9 +3,11 @@ package com.rudransh;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import javax.swing.*;
 
 
@@ -32,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
     Bird bird;
     static int gameScore = 0;
     static int highScore = 0;
+    Clip menuClip;
     // game states
     private enum GameState {
         MENU,
@@ -52,6 +55,14 @@ public class GamePanel extends JPanel implements Runnable {
         }
         if (gameState == GameState.MENU) {
             newMenu();
+            try {
+                AudioInputStream menuAudioInputStream = AudioSystem.getAudioInputStream(new File("main.wav"));
+                menuClip = AudioSystem.getClip();
+                menuClip.open(menuAudioInputStream);
+                menuClip.start();
+            } catch(UnsupportedAudioFileException | IOException | LineUnavailableException er) {
+                er.printStackTrace();
+            }
         }
         if (gameState == GameState.GAME_OVER) {
             newGameOver();
@@ -70,7 +81,7 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread.start();
         // action for jump key
         if (gameState == GameState.PLAYING) {
-            this.getInputMap().put(KeyStroke.getKeyStroke("UP"), "jump");
+            this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "jump");
             this.getActionMap().put("jump", jump);
         }
         // action for enter key
@@ -215,6 +226,17 @@ public class GamePanel extends JPanel implements Runnable {
             if (pipes.size()>0){
                 if ((pipes.get(0).x)+GamePanel.BIRD_SIZE*2<(GAME_WIDTH/5)-BIRD_SIZE && (pipes.get(0).x)+GamePanel.BIRD_SIZE*2<(GAME_WIDTH/5)-BIRD_SIZE+1){
                     gameScore++;
+                    // play the sound
+                    if(gameScore%41 == 0){
+                        try {
+                            AudioInputStream scoreAudioInputStream = AudioSystem.getAudioInputStream(new File("score.wav"));
+                            Clip clip = AudioSystem.getClip();
+                            clip.open(scoreAudioInputStream);
+                            clip.loop(0);
+                        } catch(UnsupportedAudioFileException | IOException | LineUnavailableException er) {
+                            er.printStackTrace();
+                        }
+                    }
                 }
             }
         }
@@ -223,13 +245,31 @@ public class GamePanel extends JPanel implements Runnable {
     public void checkCollision() {
         // this checks for the bird - boundary collision
         if (gameState == GameState.PLAYING && bird != null && pipes.size() > 0) {
-            if(bird.y<0)
+            if(bird.y<0){
                 bird.y = 0;
-            if(bird.y>=GAME_HEIGHT-BIRD_SIZE)
+            }
+            if(bird.y>=GAME_HEIGHT-BIRD_SIZE){
+                try {
+                    AudioInputStream hitAudioInputStream = AudioSystem.getAudioInputStream(new File("hit.wav"));
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(hitAudioInputStream);
+                    clip.loop(0);
+                } catch(UnsupportedAudioFileException | IOException | LineUnavailableException er) {
+                    er.printStackTrace();
+                }
                 GameOverEnter();
+            }
             if (pipes.size()>0){
                 for (int i = pipes.size() - 1; i >= 0; i--) {
                     if (i < pipes.size() && bird.intersects(pipes.get(i))) {
+                        try {
+                            AudioInputStream hitAudioInputStream = AudioSystem.getAudioInputStream(new File("hit.wav"));
+                            Clip clip = AudioSystem.getClip();
+                            clip.open(hitAudioInputStream);
+                            clip.loop(0);
+                        } catch(UnsupportedAudioFileException | IOException | LineUnavailableException er) {
+                            er.printStackTrace();
+                        }
                         GameOverEnter();
                     }
                 }
@@ -259,6 +299,15 @@ public class GamePanel extends JPanel implements Runnable {
         @Override
         public void actionPerformed(ActionEvent e) {
             bird.yVelocity = -7;
+            try {
+                AudioInputStream jumpAudioInputStream = AudioSystem.getAudioInputStream(new File("jump.wav"));
+                Clip clip = AudioSystem.getClip();
+                clip.open(jumpAudioInputStream);
+                clip.loop(0);
+            } catch(UnsupportedAudioFileException | IOException | LineUnavailableException er) {
+                er.printStackTrace();
+            }
+
         }
     }
     // everything inside this will happen when you enter the game over screen
@@ -266,9 +315,9 @@ public class GamePanel extends JPanel implements Runnable {
         highScore = Math.max(highScore, gameScore);
         gameState = GameState.GAME_OVER;
         newGameOver();
-        getInputMap().remove(KeyStroke.getKeyStroke("UP"));
-        getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameMenuEnter");
-        getActionMap().put("gameMenuEnter", gameMenuEnter);
+        getInputMap().remove(KeyStroke.getKeyStroke("SPACE"));
+        getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameEnter");
+        getActionMap().put("gameEnter", gameEnter);
         pipes.clear();
     }
     // everything inside this will happen when you enter the game
@@ -276,6 +325,7 @@ public class GamePanel extends JPanel implements Runnable {
         @Override
         public void actionPerformed(ActionEvent e) {
             gameState = GameState.PLAYING;
+            menuClip.stop();
             gameScore = 0;
             newBird();
             newPipe(true);
@@ -283,7 +333,7 @@ public class GamePanel extends JPanel implements Runnable {
             newPipe(true);
             newPipe(true);
             getInputMap().remove(KeyStroke.getKeyStroke("ENTER"));
-            getInputMap().put(KeyStroke.getKeyStroke("UP"), "jump");
+            getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "jump");
             getActionMap().put("jump", jump);
         }
     }
@@ -293,6 +343,14 @@ public class GamePanel extends JPanel implements Runnable {
         public void actionPerformed(ActionEvent e) {
             gameState = GameState.MENU;
             newMenu();
+            try {
+                AudioInputStream menuAudioInputStream = AudioSystem.getAudioInputStream(new File("main.wav"));
+                menuClip = AudioSystem.getClip();
+                menuClip.open(menuAudioInputStream);
+                menuClip.start();
+            } catch(UnsupportedAudioFileException | IOException | LineUnavailableException er) {
+                er.printStackTrace();
+            }
             getInputMap().remove(KeyStroke.getKeyStroke("ENTER"));
             getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "gameEnter");
             getActionMap().put("gameEnter", gameEnter);
