@@ -15,7 +15,7 @@ public class Pipe extends Rectangle {
         // initialising the pipeImage and also checking if top pipe or bottom pipe
         if (pNum == 0){
             try {
-                pipeImage = ImageIO.read(new File("longpipe.png")).getScaledInstance((int)width, (int)height, 1);
+                pipeImage = ImageIO.read(new File("longpipe.png")).getScaledInstance((int)width, (int)height+10, 1);
             } catch(IOException e) {
                 e.printStackTrace();
             }
@@ -33,6 +33,6 @@ public class Pipe extends Rectangle {
     }
     // drawing the pipes
     public void draw(Graphics g) {
-        g.drawImage(pipeImage, x, y, null);
+        g.drawImage(pipeImage, x, y-10, null);
     }
 }
