@@ -28,14 +28,17 @@ This is a simple implementation of the popular Flappy Bird game using Java and t
 
 ## Screenshots
 
+### Game Menu
 ![MainMenuImage](https://github.com/rudransh-shrivastava/flappy-bird-game/assets/125893371/14472c45-c037-4e69-b755-5fea0085fcb3)
-*Game Menu*
+
+### In Game
 
 ![InGameImage](https://github.com/rudransh-shrivastava/flappy-bird-game/assets/125893371/0e9a153c-7940-4303-948e-159119b74a0d)
-*In Game*
+
+### Game Over
 
 ![GameOverImage](https://github.com/rudransh-shrivastava/flappy-bird-game/assets/125893371/107e37f2-0cae-4d5d-935c-c1076e5c3be3)
-*Game Over*
+
 # Play
 
 ## Prerequisites
