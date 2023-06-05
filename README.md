@@ -8,23 +8,23 @@ This is a simple implementation of the popular Flappy Bird game using Java and t
 
 - Simple and addictive gameplay inspired by the popular Flappy Bird game.
 
-- <strong>Controls:</strong> Control the bird's flight by pressing the space bar.
+- **Controls:** Control the bird's flight by pressing the space bar.
 
-- <strong>Randomly generated pipes:</strong> Each game session features a unique arrangement of pipes, providing a fresh challenge.
+- **Randomly generated pipes:** Each game session features a unique arrangement of pipes, providing a fresh challenge.
 
-- <strong>Scoring system:</strong> Earn one point for successfully passing each pipe, and strive to achieve a high score.
+- **Scoring system:** Earn one point for successfully passing each pipe, and strive to achieve a high score.
 
-- <strong>Game menu:</strong> Start the game, listen to the wonderful music, or quit the game.
+- **Game menu:** Start the game, listen to the wonderful music, or quit the game.
 
-- <strong>Game over screen:</strong> Displays the final score, a high score and offers an option to restart the game.
+- **Game over screen:** Displays the final score, a high score and offers an option to restart the game.
 
-- <strong>Sound effects:</strong> Enjoy immersive sound effects for bird flapping, collisions, and scoring points.
+- **Sound effects:** Enjoy immersive sound effects for bird flapping, collisions, and scoring points.
 
-- <strong>Customizable gameplay parameters:</strong> Modify window size, bird appearance, pipe appearance, gravity, and flap force to suit your preferences.
+- **Customizable gameplay parameters:** Modify window size, bird appearance, pipe appearance, gravity, and flap force to suit your preferences.
 
-- <strong>Responsive and fluid graphics:</strong> The game utilizes the Swing graphics library to provide smooth and visually appealing animations.
+- **Responsive and fluid graphics:** The game utilizes the Swing graphics library to provide smooth and visually appealing animations.
 
-- <strong>Compatible with Java 17:</strong> Developed using Java 17, ensuring compatibility with the latest Java version.
+- **Compatible with Java 17:** Developed using Java 17, ensuring compatibility with the latest Java version.
 
 ## Screenshots
 
