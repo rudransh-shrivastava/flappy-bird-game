@@ -1,5 +1,7 @@
 # Flappy Bird Game
 
+![flappy-bird-game](https://github.com/rudransh-shrivastava/flappy-bird-game/assets/125893371/556f3f22-0219-4162-bf11-f0fbaefe06a5)
+
 Flappy Bird is a popular mobile game where the player controls a bird, navigating it through a series of pipes by tapping the screen to make the bird flap its wings.
 
 This is a simple implementation of the popular Flappy Bird game using Java and the Swing graphics library. The game allows players to control a bird by pressing the space bar to make it flap its wings and navigate through a series of pipes.
